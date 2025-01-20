@@ -52,11 +52,12 @@ const userSchema = new mongoose.Schema({
 
 const User = mongoose.model('User', userSchema)
 
-function validateUser (user) {
+function validateUser(user) {
   const schema = Joi.object().keys({
     name: Joi.string().required(),
     email: Joi.string().required().email(),
     password: Joi.string().required(),
+    userType: Joi.string().valid('admin', 'customer', 'farmer').default('customer'),
     phone: Joi.string().required(),
     location: Joi.object()
       .keys({
@@ -68,7 +69,7 @@ function validateUser (user) {
   return schema.validate(user)
 }
 
-function validateLogin (req) {
+function validateLogin(req) {
   const schema = Joi.object().keys({
     email: Joi.string().required().email(),
     password: Joi.string().required()
@@ -76,13 +77,13 @@ function validateLogin (req) {
   return schema.validate(req)
 }
 
-function validateSignUp (req) {
+function validateSignUp(req) {
   const schema = Joi.object().keys({
     name: Joi.string().required(),
     email: Joi.string().required().email(),
     password: Joi.string().required(),
     phone: Joi.string().required(),
-    userType: Joi.string().default('customer'),
+    userType: Joi.string().valid('admin', 'customer', 'farmer').required().default('customer'),
     location: Joi.object()
       .keys({
         type: Joi.string().valid('Point').default('Point'),
@@ -93,7 +94,7 @@ function validateSignUp (req) {
   return schema.validate(req)
 }
 
-function validateGLogin (req) {
+function validateGLogin(req) {
   const schema = Joi.object().keys({
     name: Joi.string().required(),
     email: Joi.string().required().email()
